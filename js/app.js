@@ -1,5 +1,4 @@
 'use strict';
-
 (function () {
     function customCreateTemplate({title, description, id}) {
         const template = document.createElement('div')
@@ -12,12 +11,17 @@
                             <div class="task__description">${description}</div>
                             <hr>
                             <i>By Vladimir Shaitan</i>
+                              <button id="delete-${id}" type="button" class="btn btn-danger">Delete Task!</button>
                         </div>`
+
+        template.querySelector(`#delete-${id}`).addEventListener('click', (event) => {
+            Controller.formDelete('task');
+            return;
+        });
         return template;
     }
 
     View.init(customCreateTemplate)
     Model.init(localStorage, 'todo-list-data')
     Controller.init('#todoForm', '[data-todo-items]')
-
 })()

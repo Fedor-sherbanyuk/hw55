@@ -1,34 +1,14 @@
 'use strict';
-let isButtonDeletePressed = false;
+
 const Controller = {
     form: null,
     todoContainer: null,
-
     initListeners() {
-        const buttonDelete = document.getElementById('delete');
         const buttonCreate = document.getElementById('create');
-        const buttonDeleteText = document.getElementById('deleteText');
-
-        buttonDelete.addEventListener('click', (event) => {
-            isButtonDeletePressed = true;
-            if (isButtonDeletePressed) {
-                this.formDelete.bind(this)();
-                return;
-            }
-        });
-        buttonCreate.addEventListener('click', (event) => {
-            isButtonDeletePressed =false;
-        });
-        buttonDeleteText.addEventListener('click', (event) => {
-            isButtonDeletePressed = true;
-         let text =document.querySelector("#todoForm > div:nth-child(2) > textarea");
-            console.log(text);
-            text.value = '';
-
-        });
         window.addEventListener('DOMContentLoaded', this.prerenderTodos.bind(this));
     },
-    formDelete(event) {
+
+    formDelete(name) {
         const data = {};
         this.form.querySelectorAll('input, textarea, select').forEach(({name, value}) => {
             data[name] = value
@@ -40,9 +20,6 @@ const Controller = {
     formHandler(event) {
         event.preventDefault()
         event.stopPropagation()
-        if (isButtonDeletePressed) {
-            return;
-        }
         const data = {}
         this.form.querySelectorAll('input, textarea, select').forEach(({name, value}) => {
             data[name] = value

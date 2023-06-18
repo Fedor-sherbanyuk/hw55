@@ -18,7 +18,6 @@ const View = {
                             <div class="taskHeading">${title} <sup>${id}</sup></div>
                             <div class="taskDescription">${description}</div>
                         </div>`
-
         return template;
     },
     findTemplateById(id) {

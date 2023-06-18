@@ -9,9 +9,6 @@ const Model = {
     getData() {
         return JSON.parse(this.storage.getItem(this.dataKey)) || [];
     },
-    getId() {
-        return JSON.parse(this.storage.getItem(this.currentId)) || [];
-    },
 
     // will get data by id from storage
     getDataById(id) {
@@ -21,22 +18,13 @@ const Model = {
     },
     deleteData() {
         const savedData = this.getData();
+        const savedDataNew = this.getData();
         if (savedData.length > 0) {
             savedData.pop();
             this.storage.setItem(this.dataKey, JSON.stringify(savedData));
         }
-        return savedData;
+        return savedDataNew;
     },
-    // deleteData() {
-    //     const savedData = this.getData();
-    //     const savedDataNew = this.getData();
-    //     if (savedData.length > 0) {
-    //         savedDataNew.pop();
-    //         this.storage.setItem(this.dataKey, JSON.stringify(savedDataNew));
-    //         return savedData;
-    //     }
-    // },
-
 
     // will save data to storage
     postData(data) {
