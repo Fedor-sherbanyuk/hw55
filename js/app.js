@@ -11,13 +11,8 @@
                             <div class="task__description">${description}</div>
                             <hr>
                             <i>By Vladimir Shaitan</i>
-                              <button id="delete-${id}" type="button" class="btn btn-danger">Delete Task!</button>
+                              <button type="button" data-delete-btn class="btn btn-danger">Delete Task!</button>
                         </div>`
-
-        template.querySelector(`#delete-${id}`).addEventListener('click', (event) => {
-            Controller.formDelete('task');
-            return;
-        });
         return template;
     }
 

@@ -23,8 +23,7 @@ const View = {
     findTemplateById(id) {
         return this.todoContainer.querySelector(`[data-id="${id}"]`);
     },
-    deleteItem(data) {
-        const id = data[data.length - 1].id;
+    deleteItem({id}) {
         const template = this.findTemplateById(id);
         if (template) {
             template.remove();

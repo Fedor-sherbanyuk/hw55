@@ -4,17 +4,19 @@ const Controller = {
     form: null,
     todoContainer: null,
     initListeners() {
-        const buttonCreate = document.getElementById('create');
         window.addEventListener('DOMContentLoaded', this.prerenderTodos.bind(this));
+        this.todoContainer.addEventListener('click',this.formDelete.bind(this))
     },
 
-    formDelete(name) {
-        const data = {};
-        this.form.querySelectorAll('input, textarea, select').forEach(({name, value}) => {
-            data[name] = value
-        })
-        const deleteTodoItem = Model.deleteData(data);
-        View.deleteItem(deleteTodoItem);
+    formDelete(event) {
+        if(!event.target.hasAttribute('data-delete-btn')) return;
+
+
+        const toId=+event.target.closest('[data-id]')
+            .getAttribute('data-id');
+
+        const deletedTodoItem = Model.deleteData(toId);
+        View.deleteItem(deletedTodoItem);
     },
 
     formHandler(event) {

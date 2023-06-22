@@ -16,14 +16,13 @@ const Model = {
             return item.id === id
         })
     },
-    deleteData() {
+    deleteData(id) {
         const savedData = this.getData();
-        const savedDataNew = this.getData();
-        if (savedData.length > 0) {
-            savedData.pop();
-            this.storage.setItem(this.dataKey, JSON.stringify(savedData));
-        }
-        return savedDataNew;
+        const index = savedData.findIndex(
+            value => value.id === id);
+       const renderElement=savedData.splice(index,1);
+        localStorage.setItem(this.dataKey, JSON.stringify(savedData));
+        return renderElement[0];
     },
 
     // will save data to storage
