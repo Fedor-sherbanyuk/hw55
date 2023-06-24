@@ -1,5 +1,4 @@
 'use strict';
-
 const Controller = {
     form: null,
     todoContainer: null,
@@ -10,11 +9,8 @@ const Controller = {
 
     formDelete(event) {
         if(!event.target.hasAttribute('data-delete-btn')) return;
-
-
         const toId=+event.target.closest('[data-id]')
             .getAttribute('data-id');
-
         const deletedTodoItem = Model.deleteData(toId);
         View.deleteItem(deletedTodoItem);
     },
@@ -32,7 +28,18 @@ const Controller = {
 
     prerenderTodos() {
       const savedData = Model.getData();
-      savedData.forEach(item => View.renderItem(item))
+        let obj = {};
+        savedData.forEach(function(item, index) {
+            obj[index] = item;
+        });
+      let itr =Object.entries(obj)[Symbol.iterator]();
+    let result = itr.next();
+    while (!result.done) {
+
+        console.log(result.value)
+        View.renderItem(result.value[1]);
+        result = itr.next();
+    }
     },
 
     init(formSelector, blockSelector) {
