@@ -1,96 +1,87 @@
-function Student(firstName, lastName, yearOfBirth) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.yearOfBirth = +yearOfBirth;
+    function Student(firstName, lastName, yearOfBirth, lessonsCount) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.yearOfBirth = +yearOfBirth;
+        this.attedance = new Array(lessonsCount);
+        this.marks  = new Array(lessonsCount);
+        this.currentLesson = 0;
+        this.lessonCount = lessonsCount;
+    }
 
-    this.score = Array(10).fill(undefined);;
-    this.attendance = Array(10).fill(undefined);;
-    this.ageStudent =
+    Student.prototype.ageStudent =
         function () {
             let currentYear = new Date().getFullYear();
             return currentYear - +this.yearOfBirth;
         };
-    this.mediumScore = function() {
-        return (
-            this.score.reduce((accumulator, currentValue) => accumulator + currentValue, 0) /
-            this.score.length
-        );
-    };
-
-    this.present = function() {
-        const emptyIndex = this.attendance.findIndex(value => value === undefined);
-        if (emptyIndex === -1) {
-            console.log("Нет свободного места для записи.");
-        } else {
-            console.log("Запись успешно добавлена.");
-            this.attendance[emptyIndex] = true;
+    Student.prototype.setAttendance =
+        function (flag, increment=true) {
+            if (this.currentLesson > this.lessonCount) throw new Error('Cannot lesson go student')
+            this.attedance[this.currentLesson] = flag;
+            increment ? this.currentLesson += 1 : null;
+        };
+    Student.prototype.present = function (mark = null) {
+        this.setAttendance(true, mark === null)
+        if (mark !== null) {
+            this.mark(mark)
+            this.currentLesson += 1
         }
     };
-
-    this.absent = function() {
-        const emptyIndex = this.attendance.findIndex(value => value === undefined);
-        if (emptyIndex === -1) {
-            console.log("Нет свободного места для записи.");
-        } else {
-            console.log("Запись успешно добавлена.");
-            this.attendance[emptyIndex] = false;
+    Student.prototype.absent = function () {
+        this.setAttendance(true)
+    };
+    Student.prototype.lessonRetake = function (lessonIndex, mark) {
+        this.attedance[lessonIndex] =true
+        this.mark(mark,lessonIndex)
+    };
+    Student.prototype.mark = function (mark, lessonIndex) {
+        if (typeof lessonIndex === 'number') {
+            this.marks[lessonIndex] = mark
+            return;
         }
+        this.marks[this.currentLesson] = mark
+    };
+    Student.prototype.calcAvgMark = function () {
+        const marCalc = this.marks.reduce((acc, item) => {
+                if (typeof item !== "undefined") {
+                    acc.sum += item;
+                    acc.lessonCount += 1;
+                }
+                return acc;
+            },
+            {
+                sum: 0,
+                lessonCount: 0
+
+            })
+        return marCalc.sum / marCalc.lessonCount;
+    };
+    Student.prototype.calcAvgAttd = function () {
+        const attdCalc = this.attedance.reduce((acc, item) => {
+            item ? acc += 1 : null;
+            return acc;
+        }, 0)
+        return attdCalc / this.currentLesson;
     };
 
-    this.mark = function(number) {
-        if (number >= 0 && number <= 10) {
-            const emptyIndex = this.score.findIndex(value => value === undefined);
-            if (emptyIndex === -1) {
-                console.log("Нет свободного места для записи.");
-            } else {
-                console.log("Запись успешно добавлена.");
-                this.score[emptyIndex] = number;
-            }
-    }
-    };
 
-    this.summary =
+    Student.prototype.summary =
         function () {
-            let score =  this.mediumScore();
-            let numberPresent =
-                (this.attendance.filter(value => value === true).length*10) / this.attendance.length;
-            switch (true) {
-                case (score > 9 && numberPresent > 9):
-                    return "Ути какой молодчинка!";
-                case (score <= 9 && numberPresent > 9||score > 9 && numberPresent <= 9):
-                    return "Норм, но можно лучше";
-                default:
-                    return "Редиска!"
-            }
-        }
+            let score = this.calcAvgMark();
+            let numberPresent = this.calcAvgAttd();
+            if (score > 9 && numberPresent > 0.9) return "Ути какой молодчинка!";
+            else if (score <= 9 && numberPresent > 0.9 || score > 9 && numberPresent <= 0.9)
+                return "Норм, но можно лучше";
+            else return "Редиска!"
 }
-let student1 = new Student("Fedor", "Sherbanyuk", "1988");
-let student2 = new Student("Jimmy", "Jimmy", "1986");
-let student3 = new Student("Eric ", "Cartman", "2000");
 
-console.log(student1.ageStudent())
-console.log(student2.ageStudent())
-console.log(student3.ageStudent())
-for (let i = 0; i < 10; i++) {
-    student1.mark(i)
+    let student1 = new Student("Fedor", "Sherbanyuk", "1988", 10);
+    let student2 = new Student("Jimmy", "Jimmy", "1986", 10);
+    let student3 = new Student("Eric ", "Cartman", "2000", 10);
+    student1.present(2)
     student1.present();
-}
-let i=0;
-while (i<10){
-    student2.mark(10)
-    student2.present();
-i++;
-}
-let j=0;
-while (j < 10) {
-    student3.mark(8);
-    student3.absent();
-    j++;
-}
-console.log(student1.summary());
-console.log(student2.summary());
-console.log(student3.summary());
-
-
-
-
+    student1.present(10)
+    student1.present(10)
+    student1.present(10)
+    student1.present(10)
+    student1.mark(5);
+    student1.summary()
